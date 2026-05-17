@@ -235,10 +235,44 @@ export class ScatterEngine extends EventEmitter {
 
     const detailPage = await newPage(this.getAdminHeaders(), { markDom: false });
     try {
-      await detailPage.goto(detailUrl, { waitUntil: 'domcontentloaded', timeout: 40000 });
+      // Tunggu sampai network idle agar halaman SPA selesai render sebelum evaluate
+      try {
+        await detailPage.goto(detailUrl, { waitUntil: 'networkidle2', timeout: 45000 });
+      } catch (navErr) {
+        // networkidle2 bisa timeout pada SPA panjang — cukup tunggu domcontentloaded
+        await detailPage.goto(detailUrl, { waitUntil: 'domcontentloaded', timeout: 40000 }).catch(() => {});
+      }
+
+      // Beri waktu tambahan agar JS SPA selesai render sebelum evaluate
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Cek apakah halaman sudah navigate ulang (redirect ke login/error)
+      const finalUrl = detailPage.url();
+      if (!finalUrl.includes(hHost) && !finalUrl.includes('history')) {
+        return await this.finishItem(item, {
+          debetValue: searchResult.debetValue,
+          scatterTitle: 'Halaman redirect — token mungkin expired',
+          checkLink: detailUrl
+        });
+      }
+
       const cap = await readBridgeCapture(detailPage);
       if (cap.token?.length >= 10) this.token = cap.token;
-      const detail = await detailPage.evaluate(DETAIL_CHECK_FN);
+
+      // Evaluate dengan proteksi navigation error
+      let detail = { ok: false, scatterTitle: 'Gagal evaluate halaman' };
+      try {
+        detail = await detailPage.evaluate(DETAIL_CHECK_FN);
+      } catch (evalErr) {
+        const msg = String(evalErr.message || '');
+        if (msg.includes('context was destroyed') || msg.includes('Navigation')) {
+          // Halaman navigate saat evaluate — kemungkinan SPA redirect
+          detail = { ok: false, scatterTitle: 'Token expired / halaman redirect saat cek' };
+        } else {
+          detail = { ok: false, scatterTitle: 'Error: ' + msg.slice(0, 80) };
+        }
+      }
+
       await this.finishItem(item, {
         debetValue: searchResult.debetValue,
         scatterTitle: detail.scatterTitle || (detail.ok ? 'Ditemukan' : 'Scatter tidak ditemukan'),
