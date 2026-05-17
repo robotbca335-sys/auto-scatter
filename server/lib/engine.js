@@ -340,6 +340,7 @@ export class ScatterEngine extends EventEmitter {
     }
   }
 
+  
   clear() {
     this.results = [];
     this.stats = { totalInput: 0, processed: 0, timeout: 0, invalid: 0 };
