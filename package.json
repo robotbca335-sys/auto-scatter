@@ -1,0 +1,22 @@
+{
+  "name": "auto-scatter-web",
+  "version": "4.0.0",
+  "description": "Auto cek scatter & approve/reject — web app (Puppeteer headless)",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "puppeteer": "^24.2.1",
+    "uuid": "^11.0.5"
+  }
+}

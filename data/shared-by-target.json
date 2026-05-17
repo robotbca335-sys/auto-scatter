@@ -1,0 +1,10 @@
+{
+  "https://bandar80.idrbo2.com": {
+    "adminUrl": "https://bandar80.idrbo2.com",
+    "adminHeadersRaw": "X-Access-Token\teyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3NzkwMjQwNzMsInVzZXJuYW1lIjoiMTgwMDA1X2JhbmRhcjgwbWFyd2FuNjI2IiwiaXNQaW5Mb2dpbiI6dHJ1ZX0.gJHL1x6Zm1EVIwKnKv3k1gxT8-HaDHK32kmoljixFRA\nX-Agent-Pkid\t180005\nX-Agent-Role\tKAPTENKASIR\nX-Agent-Suid\tBADAR\nX-Agent-User\tBANDAR80MARWAN626\nX-Agent-UserId\t1978665551754477569",
+    "adminApiPath": "ida/transaction/history/queryTransactionHistoryListForUser",
+    "updatedAt": 1779039808546,
+    "updatedBy": "marwan",
+    "version": 12
+  }
+}

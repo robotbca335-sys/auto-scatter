@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUTO SCATTER — KKS BANDAR 80</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="theme-obsidian">
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-icon">◈</span>
+      <div>
+        <h1>AUTO SCATTER</h1>
+        <p>KKS BANDAR 80 · Web Engine v4</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="connBadge" class="badge badge-live">LIVE</span>
+      <select id="themeSelect" class="select-compact" title="Tema">
+        <option value="obsidian">Obsidian</option>
+        <option value="aurora">Aurora</option>
+        <option value="pearl">Pearl</option>
+      </select>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="scatter" type="button">Cek Scatter</button>
+    <button class="tab" data-tab="admin" type="button">Admin</button>
+    <button class="tab" data-tab="bonus" type="button">BonusSMB</button>
+    <button class="tab" data-tab="rules" type="button">Aturan</button>
+  </nav>
+
+  <main class="layout">
+    <section id="panel-scatter" class="panel active">
+      <div class="card card-glow">
+        <label class="label" for="txData">Data Mutasi Mentah</label>
+        <textarea id="txData" rows="8" placeholder="Tempel blok mutasi per tiket (pisahkan baris kosong antar blok)"></textarea>
+        <div class="chips">
+          <span class="chip">Bet Rp</span>
+          <span class="chip">Scatter x3–x5</span>
+          <span class="chip">Hadiah otomatis</span>
+          <span class="chip">Headless · tanpa popup</span>
+        </div>
+        <div class="btn-row">
+          <button id="startBtn" class="btn btn-primary" type="button">
+            <span class="btn-shine"></span>Mulai Proses
+          </button>
+          <button id="copyBtn" class="btn btn-ghost" type="button">Salin Hasil</button>
+          <button id="clearBtn" class="btn btn-muted" type="button">Hapus</button>
+        </div>
+        <p id="status" class="status-bar">Siap — tempel mutasi lalu mulai.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat"><span>Total</span><b id="counterTotal">0</b></div>
+        <div class="stat"><span>Selesai</span><b id="counterProcessed">0</b></div>
+        <div class="stat warn"><span>Timeout</span><b id="counterTimeout">0</b></div>
+        <div class="stat err"><span>Invalid</span><b id="counterInvalid">0</b></div>
+      </div>
+
+      <div class="card table-card">
+        <div class="table-scroll">
+          <table id="resultTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Tx ID</th>
+                <th>Bet M</th>
+                <th>Bet A</th>
+                <th>S Bet</th>
+                <th>SC M</th>
+                <th>SC Detail</th>
+                <th>S SC</th>
+                <th>Hadiah</th>
+                <th>Rule</th>
+                <th>Status</th>
+                <th>Bonus</th>
+                <th>Hasil</th>
+              </tr>
+            </thead>
+            <tbody id="resultBody">
+              <tr class="empty-row"><td colspan="14">Belum ada data</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-admin" class="panel">
+      <div class="card">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="adminUrl">URL Dasar Admin</label>
+            <input type="url" id="adminUrl" placeholder="https://bandar80.idrbo2.com">
+          </div>
+          <div class="field full header-sync-block">
+            <label for="adminHeadersRaw">Header API Admin — sync semua pengguna (target sama)</label>
+            <p id="headersSyncStatus" class="sync-status">Belum ada header bersama untuk target ini.</p>
+            <textarea id="adminHeadersRaw" rows="6" placeholder="X-Access-Token eyJ...&#10;X-Agent-Pkid 180005&#10;(ganti harian — semua operator otomatis dapat versi terbaru)"></textarea>
+            <div class="btn-row" style="margin-top:10px;">
+              <button id="saveHeadersSyncBtn" class="btn btn-primary" type="button">Simpan header &amp; sync semua user</button>
+              <button id="reloadHeadersBtn" class="btn btn-ghost" type="button">Muat dari server</button>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="adminApiBase">Base API (game-oc)</label>
+            <input type="text" id="adminApiBase" placeholder="https://bandar80.idrbo2.com/game-oc/">
+            <label for="adminApiPath" style="margin-top:8px;display:block">Endpoint daftar transaksi</label>
+            <input type="text" id="adminApiPath" placeholder="ida/transaction/history/queryTransactionHistoryListForUser">
+            <p class="hint" style="margin-top:6px;font-size:0.75rem">Halaman cek: /transaction-record.html · API game-oc · Extension Bridge aktif (shim location + history + requests, setara 3 script eppio).</p>
+          </div>
+          <div class="field full">
+            <label for="historyUrlInput">Link History (auto token)</label>
+            <input type="text" id="historyUrlInput" placeholder="URL history lengkap dengan parameter t=">
+          </div>
+          <div class="field">
+            <label for="token">Token API</label>
+            <input type="text" id="token" placeholder="Otomatis dari history / admin">
+          </div>
+          <div class="field">
+            <label for="executorName">Nama Eksekutor</label>
+            <input type="text" id="executorName" placeholder="Nama operator">
+          </div>
+          <div class="field">
+            <label for="startDateInput">Tanggal Mulai</label>
+            <input type="date" id="startDateInput">
+          </div>
+          <div class="field">
+            <label for="endDateInput">Tanggal Akhir</label>
+            <input type="date" id="endDateInput">
+          </div>
+          <div class="field full">
+            <label for="hadiahOverride">Override Hadiah (opsional)</label>
+            <input type="text" id="hadiahOverride" placeholder="Rp 35,000">
+          </div>
+        </div>
+        <button id="saveAdminBtn" class="btn btn-primary" type="button">Simpan Pengaturan</button>
+      </div>
+    </section>
+
+    <section id="panel-bonus" class="panel">
+      <div class="card">
+        <p class="hint">Approve otomatis jika scatter <strong>SESUAI</strong>, reject jika tidak. Butuh cookie login BonusSMB (export dari browser).</p>
+        <label class="switch-row">
+          <input type="checkbox" id="autoBonus">
+          <span>Aktifkan auto approve / reject di BonusSMB</span>
+        </label>
+        <div class="field">
+          <label for="bonusUrl">URL Halaman Tiket</label>
+          <input type="text" id="bonusUrl" value="https://bonussmb.com/tickets">
+        </div>
+        <div class="field">
+          <label for="bonusCookies">Cookie JSON (array Chrome export)</label>
+          <textarea id="bonusCookies" rows="6" placeholder='[{"name":"...","value":"...","domain":".bonussmb.com"}]'></textarea>
+        </div>
+        <button id="saveBonusBtn" class="btn btn-primary" type="button">Simpan BonusSMB</button>
+      </div>
+    </section>
+
+    <section id="panel-rules" class="panel">
+      <div class="card">
+        <h2 class="card-title">Aturan Hadiah Scatter</h2>
+        <div class="table-scroll rules-scroll">
+          <table class="rules-table">
+            <thead>
+              <tr><th>#</th><th>Min</th><th>Max</th><th>3 SC</th><th>4 SC</th><th>5 SC</th><th></th></tr>
+            </thead>
+            <tbody id="rulesBody"></tbody>
+          </table>
+        </div>
+        <button id="addRuleBtn" class="btn btn-ghost" type="button">+ Aturan</button>
+        <button id="saveRulesBtn" class="btn btn-primary" type="button">Simpan Aturan</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Puppeteer headless · satu browser · tanpa popup token</span>
+    <span id="engineTag">Engine idle</span>
+  </footer>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

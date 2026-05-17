@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: auto-scatter-web
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 3847
+      - key: HEADLESS
+        value: true
+      - key: PARALLEL_LIMIT
+        value: 10
