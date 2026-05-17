@@ -9,6 +9,7 @@ const DATA_DIR = path.join(__dirname, '../../data');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 const defaults = {
+  
   adminUrl: 'https://bandar80.idrbo2.com',
   adminApiBase: 'https://bandar80.idrbo2.com/game-oc/',
   adminApiPath: 'ida/transaction/history/queryTransactionHistoryListForUser',
