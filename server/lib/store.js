@@ -45,9 +45,33 @@ async function writeLocalSettings(merged) {
   await fs.writeFile(SETTINGS_FILE, JSON.stringify(toSave, null, 2), 'utf8');
 }
 
+function settingsFromEnv() {
+  const env = process.env;
+  const out = {};
+  if (env.ADMIN_URL)       out.adminUrl      = env.ADMIN_URL;
+  if (env.EXECUTOR_NAME)   out.executorName  = env.EXECUTOR_NAME;
+  if (env.HISTORY_URL)     out.historyUrl    = env.HISTORY_URL;
+  if (env.HISTORY_HOST)    out.historyHost   = env.HISTORY_HOST;
+  if (env.API_HOST)        out.apiHost       = env.API_HOST;
+  if (env.HISTORY_GAME_ID) out.historyGameId = env.HISTORY_GAME_ID;
+  if (env.HADIAH_OVERRIDE) out.hadiahOverride = env.HADIAH_OVERRIDE;
+  if (env.ADMIN_ACCESS_TOKEN) {
+    const lines = [];
+    lines.push(`X-Access-Token ${env.ADMIN_ACCESS_TOKEN}`);
+    if (env.X_AGENT_PKID)    lines.push(`X-Agent-Pkid ${env.X_AGENT_PKID}`);
+    if (env.X_AGENT_ROLE)    lines.push(`X-Agent-Role ${env.X_AGENT_ROLE}`);
+    if (env.X_AGENT_SUID)    lines.push(`X-Agent-Suid ${env.X_AGENT_SUID}`);
+    if (env.X_AGENT_USER)    lines.push(`X-Agent-User ${env.X_AGENT_USER}`);
+    if (env.X_AGENT_USER_ID) lines.push(`X-Agent-UserId ${env.X_AGENT_USER_ID}`);
+    out.adminHeadersRaw = lines.join('\n');
+  }
+  return out;
+}
+
 export async function loadSettings() {
   const local = await readLocalSettings();
-  return mergeWithShared(local);
+  const merged = { ...local, ...settingsFromEnv() };
+  return mergeWithShared(merged);
 }
 
 export async function saveSettings(data, opts = {}) {
