@@ -48,12 +48,12 @@ async function writeLocalSettings(merged) {
 function settingsFromEnv() {
   const env = process.env;
   const out = {};
-  if (env.ADMIN_URL)       out.adminUrl      = env.ADMIN_URL;
-  if (env.EXECUTOR_NAME)   out.executorName  = env.EXECUTOR_NAME;
-  if (env.HISTORY_URL)     out.historyUrl    = env.HISTORY_URL;
-  if (env.HISTORY_HOST)    out.historyHost   = env.HISTORY_HOST;
-  if (env.API_HOST)        out.apiHost       = env.API_HOST;
-  if (env.HISTORY_GAME_ID) out.historyGameId = env.HISTORY_GAME_ID;
+  if (env.ADMIN_URL)       out.adminUrl       = env.ADMIN_URL;
+  if (env.EXECUTOR_NAME)   out.executorName   = env.EXECUTOR_NAME;
+  if (env.HISTORY_URL)     out.historyUrl     = env.HISTORY_URL;
+  if (env.HISTORY_HOST)    out.historyHost    = env.HISTORY_HOST;
+  if (env.API_HOST)        out.apiHost        = env.API_HOST;
+  if (env.HISTORY_GAME_ID) out.historyGameId  = env.HISTORY_GAME_ID;
   if (env.HADIAH_OVERRIDE) out.hadiahOverride = env.HADIAH_OVERRIDE;
   if (env.ADMIN_ACCESS_TOKEN) {
     const lines = [];
